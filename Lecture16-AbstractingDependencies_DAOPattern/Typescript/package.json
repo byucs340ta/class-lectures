@@ -1,0 +1,21 @@
+{
+  "name": "ts_budget_student_version",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^12.7.1"
+  },
+  "dependencies": {
+    "@types/sqlite3": "^3.1.5",
+    "guid-typescript": "^1.0.9",
+    "readline-sync": "^1.4.10",
+    "sqlite3": "^4.0.9"
+  }
+}
