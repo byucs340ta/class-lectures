@@ -1,0 +1,267 @@
+
+
+      |----> I_B 
+      |
+A ----|
+      |              |----> I_D
+      |----> I_C ----|
+                     |----> I_E
+
+
+
+interface I_A {
+	public void Do_A_Thing();
+}
+
+
+class A implements I_A {
+
+	private I_B myB;
+	private I_C myC;
+
+	@Inject
+	public A(I_B b, I_C c) {
+		myB = b;
+		myC = c;
+	}
+
+	public void Do_A_Thing() {
+		myB.Do_B_Thing();
+		myC.Do_C_Thing();
+	}
+
+}
+
+
+interface I_B {
+	public void Do_B_Thing();
+}
+
+
+class B implements I_B {
+	public void Do_B_Thing() {
+		...
+	}
+}
+
+
+interface I_C {
+	public void Do_C_Thing();
+}
+
+
+class C implements I_C {
+
+	private I_D myD;
+	private I_E myE;
+
+	public C() {
+		myD = null;
+		myE = null;
+	}
+
+	@Inject
+	public void setMyD(I_D d) {
+		myD = d;
+	}
+
+	@Inject
+	public void setMyE(I_E e) {
+		myE = e;
+	}
+
+	public void Do_C_Thing() {
+		myD.Do_D_Thing();
+		myE.Do_E_Thing();
+	}
+}
+
+
+interface I_D {
+	public void Do_D_Thing();
+}
+
+
+class D implements I_D {
+	public void Do_D_Thing() {
+		...
+	}
+}
+
+
+interface I_E {
+	public void Do_E_Thing();
+}
+
+
+class E implements I_E {
+	public void Do_E_Thing() {
+		...
+	}
+}
+
+// Main Program
+
+DependencyInjectionFactory diFactory = new DependencyInjectionFactory();
+
+diFactory.Bind(I_A, A);
+diFactory.Bind(I_B, B);
+diFactory.Bind(I_C, C);
+diFactory.Bind(I_D, D);
+diFactory.Bind(I_E, E);
+
+I_A myA = diFactory.Create(I_A);
+myA.Do_A_Thing();
+
+I_C myC = diFactory.Create(I_C);
+myC.Do_C_Thing();
+
+
+
+// Unit Test Driver
+
+class Mock_B implements I_B {
+	public void Do_B_Thing() {
+		...
+	}
+}
+
+
+class Mock_D implements I_D {
+	public void Do_D_Thing() {
+		...
+	}
+}
+
+
+class Mock_E implements I_E {
+	public void Do_E_Thing() {
+		...
+	}
+}
+
+
+DependencyInjectionFactory diFactory = new DependencyInjectionFactory();
+
+diFactory.Bind(I_A, A);
+diFactory.Bind(I_B, Mock_B);
+diFactory.Bind(I_C, C);
+diFactory.Bind(I_D, Mock_D);
+diFactory.Bind(I_E, Mock_E);
+
+// Test A
+I_A myA = diFactory.Create(I_A);
+myA.Do_A_Thing();
+Assert(...);
+Assert(...);
+
+// Test C
+I_C myC = diFactory.Create(I_C);
+myC.Do_C_Thing();
+Assert(...);
+Assert(...);
+
+
+
+
+// Pseudo-Code
+class DependencyInjectionFactory {
+
+	private Map<Interface, Class> implMap = new Map<Interface, Class>();
+
+	// Bind the specified Interface to the specified implemenation Class
+
+	public void Bind(Interface intf, Class klass) {
+
+		implMap.put(intf, klass);
+	}
+
+
+	// Create a concrete object that implements the specified Interface,
+	// and return it
+
+	public Object Create(Interface intf) {
+
+		// Lookup the concrete class that implements the specified interface
+
+		Class klass = implMap.get(intf);
+
+
+		// Create dependency objects (if any)
+
+		List<Object> dependencies = new List<Object>();
+
+		for (each @Inject dependency on klass) {
+
+			Object depObj = this.Create(dependency's Interface type);
+
+			dependencies.add(depObj);
+		}
+
+
+		// Create object, passing in "constructor dependencies"
+
+		Object obj = klass.create(depObj_1, depObj_2, ...);
+
+
+		// Set the "setter dependencies"
+
+		for (each setter dependency) {
+
+			obj.setDependency(depObj);
+		}
+
+		return obj;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

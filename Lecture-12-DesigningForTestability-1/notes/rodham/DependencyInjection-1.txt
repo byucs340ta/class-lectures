@@ -1,0 +1,112 @@
+
+
+      |----> B 
+      |
+A ----|
+      |            |----> D
+      |----> C ----|
+                   |----> E
+
+
+
+
+class A {
+
+	private B myB;
+	private C myC;
+
+	public A() {
+		myB = new B();
+		myC = new C();
+	}
+
+	public void Do_A_Thing() {
+		myB.Do_B_Thing();
+		myC.Do_C_Thing();
+	}
+
+}
+
+
+class B {
+	public void Do_B_Thing() {
+		...
+	}
+}
+
+
+class C {
+
+	private D myD;
+	private E myE;
+
+	public C() {
+		myD = new D();
+		myE = new E();
+	}
+
+	public void Do_C_Thing() {
+		myD.Do_D_Thing();
+		myE.Do_E_Thing();
+	}
+}
+
+
+class D {
+	public void Do_D_Thing() {
+		...
+	}
+}
+
+
+class E {
+	public void Do_E_Thing() {
+		...
+	}
+}
+
+
+// Main Program
+
+A myA = new A();
+myA.Do_A_Thing();
+
+C myC = new C();
+myC.Do_C_Thing();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,146 @@
+
+
+      |----> I_B 
+      |
+A ----|
+      |              |----> I_D
+      |----> I_C ----|
+                     |----> I_E
+
+
+
+interface I_A {
+	public void Do_A_Thing();
+}
+
+
+class A implements I_A {
+
+	private I_B myB;
+	private I_C myC;
+
+	public A(I_B b, I_C c) {
+		myB = b;
+		myC = c;
+	}
+
+	public void Do_A_Thing() {
+		myB.Do_B_Thing();
+		myC.Do_C_Thing();
+	}
+
+}
+
+
+interface I_B {
+	public void Do_B_Thing();
+}
+
+
+class B implements I_B {
+	public void Do_B_Thing() {
+		...
+	}
+}
+
+
+interface I_C {
+	public void Do_C_Thing();
+}
+
+
+class C implements I_C {
+
+	private I_D myD;
+	private I_E myE;
+
+	public C() {
+		myD = null;
+		myE = null;
+	}
+
+	public void setMyD(I_D d) {
+		myD = d;
+	}
+
+	public void setMyE(I_E e) {
+		myE = e;
+	}
+
+	public void Do_C_Thing() {
+		myD.Do_D_Thing();
+		myE.Do_E_Thing();
+	}
+}
+
+
+interface I_D {
+	public void Do_D_Thing();
+}
+
+
+class D implements I_D {
+	public void Do_D_Thing() {
+		...
+	}
+}
+
+
+interface I_E {
+	public void Do_E_Thing();
+}
+
+
+class E implements I_E {
+	public void Do_E_Thing() {
+		...
+	}
+}
+
+
+// Main Program
+
+A myA = new A(new B(), new C());
+myA.Do_A_Thing();
+
+C myC = new C();
+myC.setMyD(new D());
+myC.setMyE(new E());
+myC.Do_C_Thing();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
