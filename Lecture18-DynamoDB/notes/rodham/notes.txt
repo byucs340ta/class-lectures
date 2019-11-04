@@ -1,0 +1,64 @@
+
+DYNAMODB CONCEPTS
+
+Database types
+	Local (local file, single user)
+	Client/Server (over network, multi-user, entire db on one machine)
+	Distributed (db distributed across cluster of machines)
+	
+DynamoDB is a distributed, cloud database
+	Cloud => runs on someone else's machines, accessed through web API
+	
+Data Model
+	Tables, Items, Attributes
+	Data types:
+	DynamoDB supports many different data types for attributes within a table. 
+	They can be categorized as follows:
+		Scalar Types – A scalar type can represent exactly one value. The scalar types are number, string, binary, Boolean, and null.
+		Document Types – A document type can represent a complex structure with nested attributes, such as you would find in a JSON document. The document types are list and map.
+		Set Types – A set type can represent multiple scalar values. The set types are string set, number set, and binary set.
+		https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.NamingRulesDataTypes.html#HowItWorks.DataTypes
+	When creating a table, only the "primary key" attributes need to be defined (name + type)
+	Beyond the primary key attributes, each item can have any other attributes, and each item can be different (schema-less)
+
+Table Primary Keys
+	1. Partition (hash) key (String, Number, Binary)
+	2. (Optional) Sort (range) key (String, Number, Binary)	
+	Item's primary key must be unique: (Partition Key) or (Partition Key, Sort Key)
+
+	Item's Partition Key is hashed to determine what cluster machine an item is stored on
+	Table's items are distributed across many machines
+	
+Queries
+	Typically, a database lets you query a table using any combination of table columns
+	A query may or may not include a value for the primary key
+	In DynamoDB, a query must specify a value for the Partition Key so DynamoDB can determine
+		which machine contains the desired data (i.e., which machine to send the query to)
+	This restricts the queries you can run on a table
+	In addition to specifying a value for the Partition Key, a query may also filter results
+		based on non-Primary Key attributes
+	To enable a wider variety of queries on a table, you can create one or more indexes
+		that have primary keys matching the queries you want to run.
+	Like a table, you can run a query on an index.  An index query must specify a value for
+		the index's Partition Key so DynamoDB knows which machine has the data of interest.
+	
+	In addition to queries, you can also run a "scan" on a table to find the data you want.
+	A scan is an exhaustive search through the table, and is therefore expensive.
+	
+Paginated Queries
+	A DynamoDB query will return a maximum of 1 MB of data.
+	This means that queries with arbitrarily large results must be performed in batches (or pages)
+	When you run a query, if there more data remaining that wasn't returned, DynamoDB passes back
+		the Primary Key of the last item scanned (called the "last key").
+	In this case, you can resubmit the query and provide the "last key" from the previous
+		result.  This allows DynamoDB to resume returning results where it left off last time
+		(like a book mark).
+
+Code Example (dynamodb-example.zip)
+	Interactively create "visits" table with "visitor" and "location" as partition and sort keys
+	Interactively create "visits-index" index with "location" and "visitor" as partition and sort keys
+	Review Java sample code to:
+		Create table and index
+		Put, Get, Update, and Delete items
+	Do paginated table query
+	Do paginated index query
