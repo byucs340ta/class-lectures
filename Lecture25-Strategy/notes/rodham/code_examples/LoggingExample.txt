@@ -1,0 +1,145 @@
+
+
+//////////////
+// CLogger
+//////////////
+
+enum LogLevel {
+	LOG_CRITICAL = 1,
+	LOG_SEVERE = 2,
+	LOG_WARN = 3,
+	LOG_INFORM = 4,
+	LOG_DEBUG = 5,
+};
+
+
+class CLogger
+{
+public:
+
+	CLogger(CSyncObject * syncObj);
+
+	virtual ~CLogger(void);
+
+	LogLevel GetLogLevel();
+	void SetLogLevel(LogLevel logLevel);
+
+	void Critical(LPCTSTR logMsg);
+	void Severe(LPCTSTR logMsg);
+	void Warn(LPCTSTR logMsg);
+	void Inform(LPCTSTR logMsg);
+	void Debug(LPCTSTR logMsg);
+
+protected:
+	virtual void WriteLogEntry(LPCTSTR logMsg) = 0;
+
+private:
+	CSyncObject * m_SyncObj;
+	LogLevel      m_LogLevel;
+
+	bool IsLoggable(LogLevel logLevel);
+
+	void Log(LogLevel logLevel, LPCTSTR logMsg) {
+	
+	  	if (IsLoggable(logLevel)) {
+			m_SyncObj->Lock();
+	    	WriteLogEntry(logMsg);
+		  	m_SyncObj->Unlock();
+	  	}
+	}
+
+};
+
+
+///////////////
+// CSyncObject
+///////////////
+
+class CSyncObject {
+public:
+	virtual void Lock() = 0;
+	virtual void Unlock() = 0;
+};
+
+
+class CNullSyncObject : public CSyncObject {
+
+	virtual void Lock() {}
+
+	virtual void Unlock() {}	
+};
+
+
+class CSemaphoreSyncObject : public CSemaphoreSyncObject {
+
+	Semaphore semaphore;
+
+	virtual void Lock() { semaphore.acquire(); }
+
+	virtual void Unlock() { semaphore.release(); }	
+};
+
+
+///////////////
+// CFileLogger
+///////////////
+
+class CFileLogger : public CLogger
+{
+public:
+	CFileLogger(CSyncObject * syncObj = NULL);
+	virtual ~CFileLogger(void);
+
+	bool Init(const CString & logFileName, bool truncate, bool holdOpen);
+
+protected:
+	virtual void WriteLogEntry(LPCTSTR logMsg);
+
+private:
+	CString    m_LogFileName;
+	bool       m_HoldOpen;
+	CFile      m_LogFile;
+
+	bool OpenLogFile(bool truncate);
+	void CloseLogFile();
+};
+
+
+/////////////////
+// CStdoutLogger
+/////////////////
+
+class CStdoutLogger : public CLogger
+{
+public:
+	CStdoutLogger(CSyncObject * syncObj = NULL);
+	virtual ~CStdoutLogger(void);
+
+protected:
+	virtual void WriteLogEntry(LPCTSTR logMsg);
+
+};
+
+
+/////////////////
+
+CLogger * pLog = new CFileLogger(new CSemaphoreSyncObject());
+
+CLogger * pLog = new CStdoutLogger(new CNullSyncObject());
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
