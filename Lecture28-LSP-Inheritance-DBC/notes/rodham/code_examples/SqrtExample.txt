@@ -1,0 +1,71 @@
+
+
+class A {
+	
+	/**
+ 	* Sqrt returns the square root of its argument
+ 	*
+ 	* @param x the number for which the square root is to be computed
+ 	*
+ 	* @pre 0.0 <= x <= 100.0
+ 	*
+ 	* @post retval contains the square root of x
+ 	* @post retval is accurate to within +/- 10^(-6)
+ 	*/
+
+	public double sqrt(double x) {
+		...
+	}
+
+}
+
+
+/////////
+// BETTER
+/////////
+
+
+class B extends A {
+	
+	/**
+ 	* Sqrt returns the square root of its argument
+ 	*
+ 	* @param x the number for which the square root is to be computed
+ 	*
+ 	* @pre 0.0 <= x <= Double.MAX
+ 	*
+ 	* @post retval contains the square root of x
+ 	* @post retval is accurate to within +/- 10^(-10)
+ 	*/
+
+	public double sqrt(double x) {
+		...
+	}
+
+}
+
+
+/////////
+// WORSE
+/////////
+
+
+class B extends A {
+	
+	/**
+ 	* Sqrt returns the square root of its argument
+ 	*
+ 	* @param x the number for which the square root is to be computed
+ 	*
+ 	* @pre 1.0 <= x <= 50.0
+ 	*
+ 	* @post retval contains the square root of x
+ 	* @post retval is accurate to within +/- 10^(-3)
+ 	*/
+
+	public double sqrt(double x) {
+		...
+	}
+
+}
+
